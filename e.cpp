@@ -15,6 +15,8 @@ private:
     Node *headNode;
     Node *lastNode;
 
+    int length = 0;
+
     void emptyListHandle(int newData)
     {
         Node *newNode = new Node();
@@ -22,6 +24,7 @@ private:
 
         headNode = newNode;
         lastNode = newNode;
+        length += 1;
     }
 
 public:
@@ -35,34 +38,68 @@ public:
     void push_front(int newData)
     {
         if (headNode == NULL)
-            emptyListHandle(newData);
-            
-        else
         {
-            Node *newNode = new Node();
-            newNode->data = newData;
-
-            newNode->next = headNode;
-            headNode->prev = newNode;
-            headNode = newNode;
+            emptyListHandle(newData);
+            return;
         }
+
+        Node *newNode = new Node();
+        newNode->data = newData;
+
+        newNode->next = headNode;
+        headNode->prev = newNode;
+        headNode = newNode;
+        length += 1;
     }
 
     // Add new element at the end of the list
     void push_back(int newData)
     {
-        if (headNode == NULL)
-            emptyListHandle(newData);
-
-        else
+        if (lastNode == NULL)
         {
-            Node *newNode = new Node();
-            newNode->data = newData;
-
-            newNode->prev = lastNode;
-            lastNode->next = newNode;
-            lastNode = newNode;
+            emptyListHandle(newData);
+            return;
         }
+
+        Node *newNode = new Node();
+        newNode->data = newData;
+
+        newNode->prev = lastNode;
+        lastNode->next = newNode;
+        lastNode = newNode;
+        length += 1;
+    }
+
+    // Remove an element at specific position
+    void removeAt(int position)
+    {
+        Node *node = headNode;
+        Node *leftNode = NULL;
+        Node *rightNode = NULL;
+
+        if (position >= length)
+            throw out_of_range("Index out of range");
+
+        for (int i = 0; i < position; i++)
+            node = node->next;
+
+        leftNode = node->prev;
+        rightNode = node->next;
+
+        // Handle if position at the head node
+        if (leftNode == NULL)
+            headNode = rightNode;
+        else
+            leftNode->next = rightNode;
+        
+        // Handle if position at the last node
+        if (rightNode == NULL)
+            lastNode = leftNode;
+        else 
+            rightNode->prev = leftNode;
+
+        // Optimize memory by using `free` or `delete` keyword
+        delete node;
     }
 
     // display the content of the list
@@ -100,5 +137,7 @@ int main()
     MyList.push_back(60);
     MyList.PrintList();
 
+    MyList.removeAt(2);
+    MyList.PrintList();
     return 0;
 }
