@@ -34,6 +34,20 @@ public:
         lastNode = NULL;
     }
 
+    // https://www.geeksforgeeks.org/overloading-subscript-or-array-index-operator-in-c/
+    // operator overloading
+    int &operator[](int index)
+    {
+        if (index >= length)
+            throw out_of_range("Index out of range");
+
+        Node *node = headNode;
+        for (int i = 0; i < index; i++)
+            node = node->next;
+
+        return node->data;
+    }
+
     int size()
     {
         return length;
@@ -118,7 +132,7 @@ public:
         delete node;
         length--;
     }
-    
+
     // Delete an element from the ending of the linked list
     void pop_back()
     {
@@ -165,7 +179,10 @@ int main()
     MyList.push_back(60);
     MyList.PrintList();
 
-    MyList.removeAt(2);
+    cout << MyList[2] << endl;
+    MyList[2] = 6969;
+
+    MyList.removeAt(3);
     MyList.PrintList();
 
     MyList.pop_back();
