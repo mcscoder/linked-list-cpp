@@ -24,7 +24,7 @@ private:
 
         headNode = newNode;
         lastNode = newNode;
-        length += 1;
+        length++;
     }
 
 public:
@@ -32,6 +32,11 @@ public:
     {
         headNode = NULL;
         lastNode = NULL;
+    }
+
+    int size()
+    {
+        return length;
     }
 
     // Add new element at the start of the list
@@ -49,7 +54,7 @@ public:
         newNode->next = headNode;
         headNode->prev = newNode;
         headNode = newNode;
-        length += 1;
+        length++;
     }
 
     // Add new element at the end of the list
@@ -67,7 +72,7 @@ public:
         newNode->prev = lastNode;
         lastNode->next = newNode;
         lastNode = newNode;
-        length += 1;
+        length++;
     }
 
     // Remove an element at specific position
@@ -91,15 +96,38 @@ public:
             headNode = rightNode;
         else
             leftNode->next = rightNode;
-        
+
         // Handle if position at the last node
         if (rightNode == NULL)
             lastNode = leftNode;
-        else 
+        else
             rightNode->prev = leftNode;
 
         // Optimize memory by using `free` or `delete` keyword
         delete node;
+        length--;
+    }
+
+    // Delete an element from the beginning of the linked list
+    void pop_front()
+    {
+        Node *node = headNode;
+        Node *rightNode = headNode->next;
+        rightNode->prev = headNode->prev;
+        headNode = rightNode;
+        delete node;
+        length--;
+    }
+    
+    // Delete an element from the ending of the linked list
+    void pop_back()
+    {
+        Node *node = lastNode;
+        Node *leftNode = lastNode->prev;
+        leftNode->next = lastNode->next;
+        lastNode = leftNode;
+        delete node;
+        length--;
     }
 
     // display the content of the list
@@ -139,5 +167,12 @@ int main()
 
     MyList.removeAt(2);
     MyList.PrintList();
+
+    MyList.pop_back();
+    MyList.PrintList();
+
+    MyList.pop_front();
+    MyList.PrintList();
+
     return 0;
 }
